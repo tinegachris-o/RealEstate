@@ -1,4 +1,4 @@
-import { listData } from '../../libs/dummyData';
+import { listData } from "../../libs/dummyData";
 import Card from "../Card/Card";
 import "./list.scss";
 

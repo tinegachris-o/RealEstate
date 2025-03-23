@@ -1,12 +1,16 @@
 import axios from "axios";
+
+const baseURL = "http://localhost:8000/api" || import.meta.env.VITE_API_URL;
+
 const createAxios = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL,
   withCredentials: true,
 });
+
 // Add an interceptor to attach the token from local storage (if available)
 createAxios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // adjust based on where you store the token
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -14,4 +18,5 @@ createAxios.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
 export default createAxios;
