@@ -1,7 +1,6 @@
-
 # RealEstate App
 
-![RealEstate App Logo](client/public/Logo.png)
+![RealEstate App Logo](public/Logo.png)
 
 ## 📌 Overview
 
@@ -48,33 +47,3 @@ RealEstate App is a modern full-stack real estate platform that allows users to 
 ```bash
 git clone https://github.com/tinegachris-o/RealEstateApp.git
 cd RealEstateApp
-=======
-
-# RealEstate
-
-# Ignore Node.js dependencies
-node_modules/
-client/node_modules/
-Api/node_modules/
-
-# Ignore environment files
-.env
-client/.env
-Api/.env
-
-# Ignore build files
-dist/
-client/dist/
-Api/dist/
-
-# Ignore logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Ignore system files
-.DS_Store
-Thumbs.db
-

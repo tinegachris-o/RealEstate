@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+///post model
+
+model Post {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  price      Int?
+  images     String[]
+  address    String
+  city       String
+  latitude   String
+  longitude  String
+  bedroom    Int
+  //isAdmin   Boolean  @default(false)  // Add this field
+  type       Type
+  property   Property
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String      @db.ObjectId
+  bathroom   Int?
+  createdAt  DateTime    @default(now())
+  postDetail PostDetail?
+  savedPosts SavedPost[]
+}
+
+enum Type {
+  buy
+  rent
+}
+
+enum Property {
+  apartment
+  house
+  condo
+  land
+}
+
+model PostDetail {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  desc       String?
+  utilities  String?
+  pet        String?
+  income     String?
+  size       Int?
+  bus        Int?
+  school     Int?
+  restaurant Int?
+  //post Post @relation(fields:[postId],references :[id])
+  post       Post    @relation(fields: [postId], references: [id])
+
+  postId String @unique @db.ObjectId
+  //bedroom Int
+}
+
+model SavedPost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
+
+model User {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  email      String      @unique
+  password   String
+  username   String      @unique
+  avatar     String?
+  //isAdmin   Boolean  @default(false)  // Add this field
+  posts      Post[]
+  createdAt  DateTime    @default(now())
+  savedPosts SavedPost[]
+  chats      Chat[]      @relation(fields: [chatIDs], references: [id])
+  chatIDs    String[]    @db.ObjectId
+}
+
+model Chat {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  users       User[]    @relation(fields: [userIDs], references: [id])
+  userIDs     String[]  @db.ObjectId
+  createdAt   DateTime  @default(now())
+  seenBy      String[]  @db.ObjectId
+  messages    Message[]
+  lastMessage String?
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  userId    String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+}
