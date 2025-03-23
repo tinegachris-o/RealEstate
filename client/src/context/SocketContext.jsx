@@ -8,12 +8,22 @@ export const SocketContextProvider = ({ children }) => {
   const { currentUser } = useContext(AuthContext);
   const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    setSocket(io("http://localhost:8000"));
-  }, []);
+  // Determine WebSocket URL based on environment
+  const SOCKET_URL = "https://realestate-2-8dyr.onrender.com";
 
   useEffect(() => {
-    currentUser && socket?.emit("newUser", currentUser.id);
+    const newSocket = io(SOCKET_URL, { withCredentials: true });
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [SOCKET_URL]);
+
+  useEffect(() => {
+    if (currentUser && socket) {
+      socket.emit("newUser", currentUser.id);
+    }
   }, [currentUser, socket]);
 
   return (
