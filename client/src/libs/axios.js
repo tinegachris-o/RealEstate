@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8000/api" || import.meta.env.VITE_API_URL;
+const baseURL = "https://realestate-2-8dyr.onrender.com" 
 
 const createAxios = axios.create({
   baseURL,
