@@ -1,4 +1,4 @@
-
+to interact with app  click https://67e02e0c3555b065cb703384--tinegarealestateapp.netlify.app/
 # RealEstate App
 
 ![RealEstate App Logo](client/public/Logo.png)
