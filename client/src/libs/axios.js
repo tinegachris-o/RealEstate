@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://realestate-2-8dyr.onrender.com" 
+const baseURL = "http://localhost:8000/api";
 
 const createAxios = axios.create({
   baseURL,

@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 
 // Load environment variables
 dotenv.config();
+import path from "path";
 
 // Import your routes
 import authRoutes from "./routes/auth.route.js";
@@ -36,6 +37,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/messages", messageRoutes);
+const __dirname = path.resolve();
 
 // Create a single HTTP server from the Express app
 const server = http.createServer(app);
@@ -88,7 +90,12 @@ io.on("connection", (socket) => {
     console.log("Socket disconnected:", socket.id);
   });
 });
-
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
+}
 // Listen on one port (use Render's port or fallback to 8080 for local dev)
 const port = process.env.PORT;
 server.listen(port, () => {

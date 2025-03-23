@@ -9,7 +9,9 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   // Determine WebSocket URL based on environment
-  const SOCKET_URL = "https://realestate-2-8dyr.onrender.com";
+
+  const SOCKET_URL = "http://localhost:8000";
+
 
   useEffect(() => {
     const newSocket = io(SOCKET_URL, { withCredentials: true });
