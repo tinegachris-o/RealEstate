@@ -24,7 +24,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", process.env.CLIENT_URL],
+    origin: [
+      "http://localhost:5173",
+      "https://realestate-vtbd.onrender.com", // Production frontend
+    ],
     credentials: true,
   })
 );
