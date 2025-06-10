@@ -18,7 +18,7 @@ app.use(express.json());
 
 ////middleware
 //console.log(`hello ${username} ukoaje?`)
-///create ahttp server and attach express app
+//create ahttp server and attach express app
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -36,7 +36,7 @@ app.use("/api/users", userRoute);
 
 //Online users
 let onlineUser = [];
-//adding user
+/////adding user
 
 const addUSer = (userId, socketId) => {
   const exists = onlineUser.find((user) => user.userId === userId);

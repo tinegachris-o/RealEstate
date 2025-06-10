@@ -3,18 +3,25 @@ import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
 import server from "../../lib/axios";
 import { format } from "timeago.js";
+import EmojiPicker from "emoji-picker-react";
 import { SocketContext } from "../../context/SocketContext";
 import useNotificationStore from "../../lib/notificationStore";
+import { BsSend } from "react-icons/bs";
+
 function Chat({ chats }) {
   const decrease = useNotificationStore((state) => state.decrease);
-
   const [chat, setChat] = useState(null);
+  const [text, setText] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
   const { currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
   const messageEndRef = useRef();
+
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
+
   const handleOpenChat = async (id, receiver) => {
     try {
       const res = await server("/chats/" + id);
@@ -29,23 +36,24 @@ function Chat({ chats }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const text = formData.get("text");
-    if (!text) return;
+    if (!text.trim()) return;
 
     try {
       const res = await server.post("/messages/" + chat.id, { text });
+
       setChat((prev) => ({
         ...prev,
         messages: [...prev.messages, res.data],
       }));
-      console.log("Sending to chatId:", chat.id);
 
-      e.target.reset();
+      setText(""); // Clear input
+      setShowEmojiPicker(false); // Optionally close picker
+
       if (!chat?.receiver?.id) {
         console.warn("Cannot send message: receiver not set.");
         return;
       }
+
       socket.emit("sendMessage", {
         receiverId: chat.receiver.id,
         data: res.data,
@@ -54,6 +62,7 @@ function Chat({ chats }) {
       console.log("Error sending message:", err);
     }
   };
+
   useEffect(() => {
     const read = async () => {
       try {
@@ -62,19 +71,24 @@ function Chat({ chats }) {
         console.log(error);
       }
     };
+
     if (socket && chat) {
       socket.on("getMessage", (data) => {
         if (chat.id === data.chatId) {
-          setChat((prev) => ({ ...prev, messages: [...prev.messages, data] }));
-
+          setChat((prev) => ({
+            ...prev,
+            messages: [...prev.messages, data],
+          }));
           read();
         }
       });
     }
+
     return () => {
-      socket.off("getMessage");
+      socket?.off("getMessage");
     };
   }, [socket, chat]);
+
   return (
     <div className="chat">
       <div className="messages">
@@ -103,7 +117,7 @@ function Chat({ chats }) {
         <div className="chatBox">
           <div className="top">
             <div className="user">
-              <img src={chat.receiver.avatar || "user.png"} alt="" />
+              <img src={chat.receiver.avatar || "/user.png"} alt="" />
               {chat.receiver.username}
             </div>
             <span className="close" onClick={() => setChat(null)}>
@@ -135,8 +149,32 @@ function Chat({ chats }) {
           </div>
 
           <form onSubmit={handleSubmit} className="bottom">
-            <textarea name="text" />
-            <button>Send</button>
+            <div className="emoji-container">
+              <button
+                type="button"
+                onClick={() => setShowEmojiPicker((prev) => !prev)}
+              >
+                😊
+              </button>
+              {showEmojiPicker && (
+                <div className="emoji-picker">
+                  <EmojiPicker
+                    onEmojiClick={(emojiData) =>
+                      setText((prev) => prev + emojiData.emoji)
+                    }
+                  />
+                </div>
+              )}
+            </div>
+            <textarea
+              name="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Type a message..."
+            />
+            <button type="submit">
+              <BsSend />
+            </button>
           </form>
         </div>
       )}
