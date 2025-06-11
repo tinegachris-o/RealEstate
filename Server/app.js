@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import http from "http"; // <-- Needed to create HTTP server
 import { Server } from "socket.io"; // <-- Socket.IO
-
+import path from "path"
 dotenv.config();
 import postRoute from "./routes/post.route.js";
 import authRoute from "./routes/auth.route.js";
@@ -13,6 +13,7 @@ import testRoute from "./routes/test.route.js";
 import userRoute from "./routes/user.route.js";
 import chatRoute from "./routes/chat.route.js";
 import messageRoute from "./routes/message.route.js";
+import path from "path";
 const port = process.env.PORT;
 app.use(express.json());
 
@@ -78,8 +79,14 @@ io.on("connection", (socket) => {
     console.log("❌ A user disconnected:", socket.id);
   });
 });
-
+const __dirname=path.resolve()
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
+}
 server.listen(port, () => {
   console.log(`🚀 Server and Socket.IO listening on port ${port}`);
 });
-////
+//

@@ -8,7 +8,9 @@ export const SocketContextProvider = ({ children }) => {
 
   const [socket, setSocket] = useState(null);
   useEffect(() => {
-    const newSocket = io("http://localhost:5000");
+    const SOCKET_URL = import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
+
+    const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
     return () => {
       newSocket.disconnect();
