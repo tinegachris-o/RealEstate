@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon Server/app.js",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "start": " NODE_ENV=production nodemon Server/app.js",
+    "start": " NODE_ENV=production node Server/app.js",
     "generate": "npx prisma generate",
     "db:push": "npx prisma db push",
     "db:init": "npm run generate && npm run db:push"
