@@ -76,9 +76,8 @@ function ProfileUpdatePage() {
         />
         <UploadWidget
           uwfConfig={{
-            cloudName: "dgjg8ob5b",
-            uploadPreset: "estate",
-            
+            cloudName: import.meta.env.VITE_CLOUDNAME,
+            uploadPreset: import.meta.env.VITE_UPLOADPRESET,
             maxImageFileSize: 90000000,
             folder: "avatars",
           }}

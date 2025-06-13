@@ -1,15 +1,20 @@
 import express from "express";
 import cors from "cors";
+import fs from "fs";
+
 const app = express();
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import http from "http"; // <-- Needed to create HTTP server
 import { Server } from "socket.io"; // <-- Socket.IO
-import path from "path"
+//import path from "path";
+import { fileURLToPath } from "url";
+
 dotenv.config();
 import postRoute from "./routes/post.route.js";
 import authRoute from "./routes/auth.route.js";
-import testRoute from "./routes/test.route.js";
+
+//import testRoute from "./routes/test.route.js";
 import userRoute from "./routes/user.route.js";
 import chatRoute from "./routes/chat.route.js";
 import messageRoute from "./routes/message.route.js";
@@ -79,13 +84,25 @@ io.on("connection", (socket) => {
     console.log("❌ A user disconnected:", socket.id);
   });
 });
-const __dirname=path.resolve()
+//
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+//console.log("thus is my file name", __filename);
+//console.log("thus is my dir name", __dirname);
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/client/dist")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  // Resolve the true client/dist path (one level up from Server/)
+  const clientDistPath = path.join(__dirname, "..", "client", "dist");
+//console.log(clientDistPath)
+  app.use(express.static(clientDistPath));
+  console.log("Client dist exists?", fs.existsSync(clientDistPath));
+  console.log("Dist contents:", fs.readdirSync(clientDistPath));
+  
+  // /Catch-all to return index.html for client-side routing
+  app.get("/{*splat}", (req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
   });
 }
+
 server.listen(port, () => {
   console.log(`🚀 Server and Socket.IO listening on port ${port}`);
 });

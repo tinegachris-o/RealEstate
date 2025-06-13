@@ -1,4 +1,4 @@
-  import { useState } from "react";
+import { useState } from "react";
 import "./newPostPage.scss";
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
@@ -155,15 +155,14 @@ function NewPostPage() {
         </div>
       </div>
       <div className="sideContainer">
-        {images.map((image,index)=>(
-          <img src={image} key={index} alt=""/>
+        {images.map((image, index) => (
+          <img src={image} key={index} alt="" />
         ))}
         <UploadWidget
-        
           uwfConfig={{
-            multiple:true,
-            cloudName: "dgjg8ob5b",
-            uploadPreset: "estate",
+            multiple: true,
+            cloudName: import.meta.env.VITE_CLOUDNAME,
+            uploadPreset: import.meta.env.VITE_UPLOADPRESET,
             //multiple: true,
             maxImageFileSize: 90000000,
             folder: "posts",

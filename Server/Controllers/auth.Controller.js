@@ -70,7 +70,7 @@ export const logout = async (req, res) => {
     .status(200)
     .json({ message: "logged out sucessfully" });
 };
-export const getCurrentUser = async (req, res) => {
+/*export const getCurrentUser = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
@@ -83,4 +83,4 @@ export const getCurrentUser = async (req, res) => {
     console.error(err);
     res.status(500).json("Server error");
   }
-};
+};*/
